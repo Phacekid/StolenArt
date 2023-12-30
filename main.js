@@ -116,14 +116,12 @@ ${attr}
 bot.onText(/\/sa (.+)/, (msg, match) => {
   let nftId = match[1].trim().replace(/^0+/, "");
   let currentChat = msg.chat.id;
-  // console.log(nftId);
   if (nftId >= 1 && nftId <= 10000) {
+    console.log(nftId);
     sendNFTInfo(currentChat, nftId);
   } else {
     bot.sendMessage(currentChat, "Please put a valid number after the command");
   }
-
-  // console.log(echoText);
 });
 
 main();

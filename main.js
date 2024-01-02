@@ -9,7 +9,6 @@ const contractABI = await jsonfile.readFile("./abi/erc721ABI.json");
 
 dotenv.config();
 const CA = "0x01c2B0359bde2bE676d8aA9470DE921DC3b4EAF9";
-const receiver = "0xaCC3A464fa2Ac6c93e0Ee6F952FF0E8b438e2A36";
 const rpcUrl = `https://smartbch.fountainhead.cash/mainnet`;
 
 const token = process.env.TOKEN;
@@ -23,10 +22,7 @@ app.get("/", (req, res) => {
 });
 
 const provider = new ethers.providers.JsonRpcProvider(rpcUrl, 10000);
-const contract = new ethers.Contract(CA, contractABI, provider); // cackles
-var wallet = ethers.Wallet.createRandom();
-const account = wallet.connect(provider);
-const notMinted = "NFT not minted";
+const contract = new ethers.Contract(CA, contractABI, provider); // stolen Art
 
 let getMetadata = async function (tokenId) {
   try {
@@ -80,29 +76,12 @@ async function main() {
   }
 }
 
-let sendNFTInfo = async function (currentChat, tokenId) {
-  // console.log(finalOut);
-  try {
-    let [name, img, attr] = await getMetadata(tokenId);
-    bot.sendPhoto(currentChat, img, {
-      caption: `
-Stolen Art ${name}
-\<code\>Traits:\<\/code\>
-${attr}
-`,
-      parse_mode: "HTML",
-    });
-  } catch (err) {
-    console.log(err);
-  }
-};
-
 let sendMintMssg = async function (id) {
   try {
     let [name, img, attr] = await getMetadata(id);
     bot.sendPhoto(chatId, img, {
       caption: `
-Stolen Art ${name} has been Minted 
+Stolen Art ${name} has been Minted
 \<code\>Traits:\<\/code\>
 ${attr}
 `,
@@ -112,17 +91,6 @@ ${attr}
     console.log(err);
   }
 };
-
-bot.onText(/\/sa (.+)/, (msg, match) => {
-  let nftId = match[1].trim().replace(/^0+/, "");
-  let currentChat = msg.chat.id;
-  if (nftId >= 1 && nftId <= 10000) {
-    console.log(nftId);
-    sendNFTInfo(currentChat, nftId);
-  } else {
-    bot.sendMessage(currentChat, "Please put a valid number after the command");
-  }
-});
 
 main();
 app.listen(PORT, () => {

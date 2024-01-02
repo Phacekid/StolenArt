@@ -94,11 +94,6 @@ ${attr}
 
 main();
 
-bot.onText(/\/howdy/, (msg) => {
-  // const chat_ID = msg.chat.id;
-  // console.log(chat_ID);
-  bot.sendMessage(chatId, "Howdy");
-});
 app.listen(PORT, () => {
   console.log(`server running at port ${PORT}`);
 });
